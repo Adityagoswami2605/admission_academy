@@ -122,6 +122,7 @@ while($row=mysqli_fetch_array($q) )
 $s=$row['score'];
 }
 $q=mysqli_query($con,"DELETE FROM `history` WHERE eid='$eid' AND email='$email' " )or die('Error184');
+$q=mysqli_query($con,"INSERT INTO history VALUES('$email','$eid' ,'0','0','0','0',NOW())")or die('Error');
 $q=mysqli_query($con,"SELECT * FROM rank WHERE email='$email'" )or die('Error161');
 while($row=mysqli_fetch_array($q) )
 {
@@ -131,7 +132,7 @@ $sun=$sun-$s;
 
 
 $q=mysqli_query($con,"UPDATE `rank` SET `score`=$sun ,time=NOW() WHERE email= '$email'")or die('Error174');
-header("location:first.php?q=quiz&step=200&eid=$eid&n=1&t=$t&x=1");
+header("location:first.php?q=quiz&step=200&eid=$eid&n=1&t=$t");
 }
 
 ?>

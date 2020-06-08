@@ -1,6 +1,8 @@
 <html>
-<title>Terms And Conditions</title>
+
 <head>
+<title>Submitting</title>
+<link rel="shortcut icon" type="image/x-icon" href="image/favicon.png"/>
 	<link  rel="stylesheet" href="css/bootstrap.min.css"/>
  <link  rel="stylesheet" href="css/bootstrap-theme.min.css"/>    
  <link rel="stylesheet" href="css/main.css">
@@ -8,8 +10,16 @@
  <script src="js/jquery.js" type="text/javascript"></script>
 </head>
 <body>
-	<div class="panel">
-	      <div class="modal-header">
+	<div style="height:100%; width:100%">
+	<div  style="padding:200px; font-family:  sans-serif; width:100%; display:flex;align-items:center;justify-content:center; color:orange; font-size:25px" >
+	
+	
+	  <p>Your test is submitting.....<br>The result will be visible to you in a bit please wait for that....<p>
+	
+	
+	
+	</div>
+	      <!-- <div class="modal-header">
 	        <h4 class="modal-title" style="font-family:'typo' "><span style="color:orange">About us</span></h4>
 	      </div>
 	    
@@ -26,7 +36,7 @@
 	          &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;+91 9717136871<br><br>
 	          Email:  <a href="mailto:admissionacademy7@gmail.com" style="color:#000000">  admissionacademy7@gmail.com</a>
 	        </p>
-	      </div>
+	      </div> -->
 </div>
 
 

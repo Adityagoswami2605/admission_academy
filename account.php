@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <title>Profile</title>
+<link rel="shortcut icon" type="image/x-icon" href="image/favicon.png"/>
 <link  rel="stylesheet" href="css/bootstrap.min.css"/>
  <link  rel="stylesheet" href="css/bootstrap-theme.min.css"/>    
  <link rel="stylesheet" href="css/main.css">
@@ -36,7 +37,7 @@ include_once 'dbConnection.php';
 <div class="header">
 <div class="row">
 <div class="col-lg-6">
-<span class="logo">Admission Academy</span></div>
+<span class="logo"><img src="image/logo.png" style="height:70px;width:320px"></span></div>
 <div class="col-md-4 col-md-offset-2">
  <?php
  include_once 'dbConnection.php';
@@ -101,22 +102,23 @@ $c=1;
 while($row = mysqli_fetch_array($result)) {
 	$title = $row['title'];
 	$total = $row['total'];
-  $_SESSION["total"]=$total;
 	$sahi = $row['sahi'];
-    $time = $row['time'];
+  $time = $row['time'];
 	$eid = $row['eid'];
-  $_SESSION["eid"]=$eid;
 $q12=mysqli_query($con,"SELECT score FROM history WHERE eid='$eid' AND email='$email'" )or die('Error98');
 $s=0;
 while($marks=mysqli_fetch_array($q12))
 {
 	$s=$marks['score'];
 }
-$percent=($s/$total)*100;
+
+
+$maximum=$total*$sahi;
+$percent=($s/$maximum)*100;
 $rowcount=mysqli_num_rows($q12);	
 if($rowcount == 0){
 	echo '<tr><td>'.$c++.'</td><td>'.$title.'</td><td>'.$total.'</td><td>'.$sahi*$total.'</td><td>'.$time.'&nbsp;min</td>
-	<td><b><a href="first.php?q=quiz&step=200&eid='.$eid.'&n=1&t='.$total.'&x=1" class="pull-right btn sub1"  style="margin:0px;background:orange"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;<span class="title1"><b>Start</b></span></a></b></td></tr>';
+	<td><b><a href="first.php?q=quiz&step=200&eid='.$eid.'&n=1&t='.$total.'" class="pull-right btn sub1"  style="margin:0px;background:orange"><span class="glyphicon glyphicon-new-window" aria-hidden="true"></span>&nbsp;<span class="title1"><b>Start</b></span></a></b></td></tr>';
 }
 else if($percent<40)
 {
@@ -157,14 +159,22 @@ while($row=mysqli_fetch_array($q) )
 {
 $s=$row['score'];
 $r=$row['sahi'];
-$w=$total-$r;
-echo '<tr style="color:#66CCFF"><td>Total Questions</td><td>'.$total.'</td></tr>
+$w=$row['wrong'];
+$qa=$row['level'];
+echo '<tr style="color:#66CCFF"><td>Total Questions&nbsp;<span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span></td><td>'.$total.'</td></tr>
+      <tr style="color:#FF9800"><td>Questions Attempted&nbsp;<span class="glyphicon glyphicon-asterisk" aria-hidden="true"></span></td><td>'.$qa.'</td></tr>
+      
       <tr style="color:#99cc32"><td>right Answer&nbsp;<span class="glyphicon glyphicon-ok-circle" aria-hidden="true"></span></td><td>'.$r.'</td></tr> 
 	  <tr style="color:red"><td>Wrong Answer&nbsp;<span class="glyphicon glyphicon-remove-circle" aria-hidden="true"></span></td><td>'.$w.'</td></tr>
 	  <tr style="color:#66CCFF"><td>Score&nbsp;<span class="glyphicon glyphicon-star" aria-hidden="true"></span></td><td>'.$s.'</td></tr>';
 }
-
-$percent=round(($s/$total)*100,2);
+$q=mysqli_query($con,"SELECT * FROM quiz WHERE eid='$eid' " );
+	while($row=mysqli_fetch_array($q) )
+		{
+		   $sahi=$row['sahi'];
+    }
+    $totalmarks=$total*$sahi;
+$percent=round($s/$totalmarks*100,2);
 echo '<tr style="color:#990000"><td>Percentage&nbsp;<span class="glyphicon glyphicon-stats" aria-hidden="true"></span></td><td>'.$percent.'</td></tr>';
 if($percent<40)
 {
@@ -192,7 +202,7 @@ if(@$_GET['q']== 2)
 $q=mysqli_query($con,"SELECT * FROM history WHERE email='$email'  ORDER BY date DESC " )or die('Error197');
 echo  '<div class="panel title">
 <table class="table table-striped title1" >
-<tr style="color:red"><td><b>S.N.</b></td><td><b>Quiz</b></td><td><b>Total Question</b></td><td><b>Percentage</b></td><td><b>Status</b></td></tr>';
+<tr style="color:red"><td><b>S.N.</b></td><td><b>Quiz</b></td><td><b>Total Question</b></td><td><b>Score</b></td><td><b>Percentage</b></td><td><b>Status</b></td></tr>';
 $c=0;
 while($row=mysqli_fetch_array($q) )
 {
@@ -201,20 +211,22 @@ $s=$row['score'];
 $w=$row['wrong'];
 $r=$row['sahi'];
 $qa=$row['level'];
-$q23=mysqli_query($con,"SELECT title,total FROM quiz WHERE  eid='$eid' " )or die('Error208');
+$q23=mysqli_query($con,"SELECT title,total,sahi FROM quiz WHERE  eid='$eid' " )or die('Error208');
 while($row=mysqli_fetch_array($q23) )
 {
 $title=$row['title'];
 $total=$row['total'];
+$sahi=$row['sahi'];
 }
 $c++;
-$percent=($s/$total)*100;
+$temp=$total*$sahi;
+$percent=round(($s/$temp)*100);
 if($percent<40)
 {
-	echo '<tr><td>'.$c.'</td><td>'.$title.'</td><td>'.$total.'</td><td>'.$percent.'</td><td style="color:red;"><b>Not Qualified</b></td></tr>';
+	echo '<tr><td>'.$c.'</td><td>'.$title.'</td><td>'.$total.'</td><td>'.$s.'</td><td>'.$percent.'</td><td style="color:red;"><b>Not Qualified</b></td></tr>';
 }
 else
-echo '<tr><td>'.$c.'</td><td>'.$title.'</td><td>'.$total.'</td><td>'.$percent.'</td><td style="color:green;"><b>Qualified</b></td></tr>';
+echo '<tr><td>'.$c.'</td><td>'.$title.'</td><td>'.$total.'</td><td>'.$s.'</td><td>'.$percent.'</td><td style="color:green;"><b>Qualified</b></td></tr>';
 }
 echo'</table></div>';
 }

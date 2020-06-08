@@ -1,6 +1,7 @@
 <html>
-<title>Questions</title>
 <head>
+<title>Questions</title>
+<link rel="shortcut icon" type="image/x-icon" href="image/favicon.png"/>
  <link  rel="stylesheet" href="css/bootstrap.min.css"/>
  <link  rel="stylesheet" href="css/bootstrap-theme.min.css"/>    
  <link rel="stylesheet" href="css/main.css">
@@ -9,7 +10,7 @@
  <script>
   window.history.forward(); 
         function noBack() { 
-        	window.alert("hgugiug");
+        
             window.history.forward(); 
         }
   </script> 
@@ -17,7 +18,7 @@
 </head>
 
 <body>
-
+<div  id="response" style= " font-family:  sans-serif; text-align:right; position:absolute; width:100%; top:25px;right:66; color:orange; font-size:25px "></div>
 <?php
 session_start();
 include_once 'dbConnection.php';
@@ -33,7 +34,7 @@ $_SESSION["total"]=$total;
 
 
 $q=mysqli_query($con,"SELECT * FROM questions WHERE eid='$eid' AND sn='$sn' " );
-echo '<div  id=response style= " font-family:  sans-serif; text-align:right; position:absolute; width:100%; top:25px;right:66; color:orange; font-size:25px "></div>';
+
 echo '<div class="panel" style="margin:5%">';
 
 while($row=mysqli_fetch_array($q) )
@@ -94,10 +95,12 @@ if($ans == $ansid)
 		{
 			$s=$row['score'];
 			$r=$row['sahi'];
+			$level=$row['level'];
 		}
 	$r++;
+	$level++;
 	$s=$s+$sahi;
-	$q=mysqli_query($con,"UPDATE `history` SET `score`=$s,`level`=$sn,`sahi`=$r, date= NOW()  WHERE  email = '$email' AND eid = '$eid'")or die('Error124');
+	$q=mysqli_query($con,"UPDATE `history` SET `score`=$s,`level`=$level,`sahi`=$r, date= NOW()  WHERE  email = '$email' AND eid = '$eid'")or die('Error124');
 
 } 
 else
@@ -106,7 +109,8 @@ else
 
 	while($row=mysqli_fetch_array($q) )
 		{
-		   $wrong=$row['wrong'];
+		   $wron=$row['wrong'];
+		   
 		}
 	// if($sn == 1)
 	// 	{
@@ -115,12 +119,26 @@ else
 	$q=mysqli_query($con,"SELECT * FROM history WHERE eid='$eid' AND email='$email' " )or die('Error139');
 	while($row=mysqli_fetch_array($q) )
 		{
+			
 			$s=$row['score'];
 			$w=$row['wrong'];
+			$level=$row['level'];
 		}
-	$w++;
-	$s=$s-$wrong;
-	$q=mysqli_query($con,"UPDATE `history` SET `score`=$s,`level`=$sn,`wrong`=$w, date=NOW() WHERE  email = '$email' AND eid = '$eid'")or die('Error147');
+	$q=mysqli_query($con,"SELECT * FROM options WHERE qid='$qid' " )or die('Error139');
+	while($row=mysqli_fetch_array($q) )
+	{
+		$optionid=$row['optionid'];
+		if($ans==$optionid)
+		{
+		   $w++;
+		   $level++;
+		   $s=$s-$wron;
+		   $q=mysqli_query($con,"UPDATE `history` SET `score`=$s,`level`=$level,`wrong`=$w, date=NOW() WHERE  email = '$email' AND eid = '$eid'")or die('Error147');
+		}
+	}
+	
+
+	
 }
 
 
@@ -170,8 +188,8 @@ header("location:account.php?q=result&eid=$eid");
 
 
 
-<script type="text/javascript">
-  var refreshIntervalId=setInterval(function()
+<script async type="text/javascript">
+  setInterval(function()
 	{
       var xmlhttp=new XMLHttpRequest();
 	  xmlhttp.open("GET","response.php",false)
@@ -180,28 +198,31 @@ header("location:account.php?q=result&eid=$eid");
 
       	 
       	 document.getElementById("response").innerHTML=xmlhttp.responseText;
-     
 
-      <?php 
-      $duration=$_SESSION["duration"];
+	  <?php 
+	  $dur=$_SESSION["dur"];	  
       ?>
-      var timeleft="<?php echo $duration?>";
+      var timeleft="<?php echo $dur?>";
+	  
+	  
       setTimeout(function()
       {
       	
-      	clearInterval(refreshIntervalId);
+      //	clearInterval(refreshIntervalId);
       	<?php
          $eid=$_SESSION["eid"];
          $total=$_SESSION["total"];
         
       	?>
       	window.open("account.php?q=result&eid=<?php echo $eid?>","_self","");
-      },((timeleft*60))*1000);
+      },(timeleft-1)*1000);
 
 
 
-
+    
 	},1000);
+	
+
 
 </script>
 

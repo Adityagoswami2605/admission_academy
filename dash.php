@@ -4,7 +4,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<title>DASHBOARD </title>
+<title>ADMIN DASHBOARD </title>
+<link rel="shortcut icon" type="image/x-icon" href="image/favicon.png"/>
 <link  rel="stylesheet" href="css/bootstrap.min.css"/>
  <link  rel="stylesheet" href="css/bootstrap-theme.min.css"/>    
  <link rel="stylesheet" href="css/main.css">
@@ -35,7 +36,7 @@ $(function () {
 <div class="header">
 <div class="row">
 <div class="col-lg-6">
-<span class="logo">Admission Academy</span></div>
+<span class="logo"><img src="image/logo.png" style="height:70px;width:320px"></span></div>
 <?php
  include_once 'dbConnection.php';
 session_start();
